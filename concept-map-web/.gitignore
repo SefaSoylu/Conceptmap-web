@@ -9,7 +9,8 @@
 /coverage
 
 # uploads
-/server/uploads
+/server/data
+/server/.venv
 
 # production
 /build

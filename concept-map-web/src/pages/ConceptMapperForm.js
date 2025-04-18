@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import '../concept-mapper.css';
+
 
 function ConceptMapperForm() {
   const [status, setStatus] = useState("");
@@ -94,72 +96,85 @@ function ConceptMapperForm() {
   };
 
   return (
-    <div>
-      <h1>Concept Mapper</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="domain"
-          placeholder="Domain"
-          value={formData.domain}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="vocabulary"
-          placeholder="Vocabulary"
-          value={formData.vocabulary}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="conceptClass"
-          placeholder="Concept Class"
-          value={formData.conceptClass}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="conceptColumn"
-          placeholder="Concept Column"
-          value={formData.conceptColumn}
-          onChange={handleChange}
-        />
-        <input type="file" name="conceptCsv" onChange={handleFileChange} />
-        <input type="file" name="modelPack" onChange={handleFileChange} />
-        <button type="submit">Run Concept Mapper</button>
-      </form>
+    <>
+    <div className="navbar">
+      <div className="navbar-content">
+        <h1 className="navbar-title">Concept Mapper</h1>
+        <nav className="navbar-links">
+          {/* Add nav buttons/links here if needed */}
+          {/* Example: <a href="/about">About</a> */}
+        </nav>
+      </div>
+    </div>
+    <div className="mapper-container">
+  <form className="mapper-form" onSubmit={handleSubmit}>
+    <input
+      className="input"
+      type="text"
+      name="domain"
+      placeholder="Domain"
+      value={formData.domain}
+      onChange={handleChange}
+    />
+    <input
+      className="input"
+      type="text"
+      name="vocabulary"
+      placeholder="Vocabulary"
+      value={formData.vocabulary}
+      onChange={handleChange}
+    />
+    <input
+      className="input"
+      type="text"
+      name="conceptClass"
+      placeholder="Concept Class"
+      value={formData.conceptClass}
+      onChange={handleChange}
+    />
+    <input
+      className="input"
+      type="text"
+      name="conceptColumn"
+      placeholder="Concept Column"
+      value={formData.conceptColumn}
+      onChange={handleChange}
+    />
+    <input className="file-input" type="file" name="conceptCsv" onChange={handleFileChange} />
+    <input className="file-input" type="file" name="modelPack" onChange={handleFileChange} />
+    <button className="submit-btn" type="submit">Run Concept Mapper</button>
+  </form>
 
-      <p>Status: {status}</p>
+  <p className="status">{status}</p>
 
-      {results.length > 0 && (
-        <div>
-          <h2>Results</h2>
-            <a href="http://localhost:5001/download" download>
-                <button onClick={handleDownload}>⬇️ Download Results (CSV)</button>
-            </a>
-          <table border="1">
-            <thead>
-              <tr>
-                {Object.keys(results[0]).map((key) => (
-                  <th key={key}>{key}</th>
+  {results.length > 0 && (
+    <div className="results-container">
+      <h2>Results</h2>
+      <button className="download-btn" onClick={handleDownload}>⬇️ Download Results (CSV)</button>
+      <div className="results-table-container">
+        <table className="results-table">
+          <thead>
+            <tr>
+              {Object.keys(results[0]).map((key) => (
+                <th key={key}>{key}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {results.map((row, index) => (
+              <tr key={index}>
+                {Object.values(row).map((val, i) => (
+                  <td key={i}>{val}</td>
                 ))}
               </tr>
-            </thead>
-            <tbody>
-              {results.map((row, index) => (
-                <tr key={index}>
-                  {Object.values(row).map((val, i) => (
-                    <td key={i}>{val}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
-  );
-}
+  )}
+</div>
+</>
+)}
 
 export default ConceptMapperForm;
