@@ -1,0 +1,3 @@
+[submodule "concept-map-web/ehrqc"]
+	path = concept-map-web/ehrqc
+	url = https://gitlab.com/tacticality6/ehrqc.git
