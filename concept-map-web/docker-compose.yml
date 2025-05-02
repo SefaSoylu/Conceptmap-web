@@ -1,0 +1,44 @@
+version: "3.10"
+services:
+  ehrqc-env:
+    build: 
+      context: ./ehrqc
+    image: ehrqc:latest
+    volumes:
+      - ./ehrqc/data:/home/EHRQC/data
+    stdin_open: true
+    tty: true
+
+  server:
+    build:
+      context: ./server
+    image: ehrqc-backend
+    depends_on:
+      - ehrqc-env
+      - postgres
+    ports:
+      - "5001:5001"
+    stdin_open: true
+    tty: true
+  
+  frontend:
+    build:
+        context: ./frontend
+    image: ehrqc-frontend
+    ports:
+      - "3000:80"  # Map nginx port 80 to localhost:3000
+    stdin_open: true
+    tty: true
+
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./db_init:/docker-entrypoint-initdb.d
+      - ./postgres-data:/var/lib/postgresql/data

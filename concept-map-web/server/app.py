@@ -23,14 +23,10 @@ def run_concept_mapper_background(domain, vocab, concept_class, concept_col):
         status["done"] = False
         status["error"] = None
 
-        output_path = r"C:/Users/sweet/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv" # change this to your file path
-
-        python_executable = os.path.join(os.getenv("VIRTUAL_ENV"), "Scripts", "python.exe")
-
-        print("VIRTUAL_ENV:", os.getenv("VIRTUAL_ENV"))
+        output_path = r"/home/EHRQC/data/concepts_out.csv"
 
         cmd = [
-            python_executable,
+            "python",
             "-m", "ehrqc.standardise.migrate_omop.ConceptMapper",
             domain,
             vocab,
@@ -48,7 +44,7 @@ def run_concept_mapper_background(domain, vocab, concept_class, concept_col):
             cmd,
             capture_output=True,
             text=True,
-            cwd=r"C:/Users/sweet/OneDrive/Desktop/Workspace/EHRQC" # change this to your file path
+            cwd=r"/home/EHRQC"
         )
 
         print("Subprocess finished.")
@@ -108,7 +104,7 @@ def check_status():
 @app.route("/results", methods=["GET"])
 def get_results():
     try:
-        output_path = r"C:/Users/sweet/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv" # change this to your file path
+        output_path = r"/home/EHRQC/data/concepts_out.csv"
         if not os.path.exists(output_path):
             return jsonify({"error": "Output file not found."}), 404
         df = pd.read_csv(output_path)
@@ -120,7 +116,7 @@ def get_results():
 @app.route("/download", methods=["GET"])
 def download_results():
     try:
-        output_path = r"C:/Users/sweet/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv" # change this to your file path
+        output_path = r"/home/EHRQC/data/concepts_out.csv"
         if not os.path.exists(output_path):
             return jsonify({"error": "Output file not found."}), 404
         return send_file(output_path, as_attachment=True)
