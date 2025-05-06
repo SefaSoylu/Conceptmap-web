@@ -1,0 +1,15 @@
+$primary-colour: #1875d0;
+
+.nav {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: space-between;
+
+  background-color: $primary-colour;
+  color: white;
+
+  &__title {
+    font-weight: normal;
+  }
+}
