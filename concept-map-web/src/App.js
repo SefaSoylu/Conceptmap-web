@@ -1,7 +1,8 @@
 import './App.css';
 import ConceptMapperForm from './pages/ConceptMapperForm';
 import NavigationBar from './components/NavigationBar/NavigationBar';
-import HomePage from './pages/HomePage';
+import HomePage from './pages/HomePage/HomePage';
+import ConceptMapperPage from './pages/ConceptMapperPage/ConceptMapperPage';
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
     // </div>
     <div className="App">
       <NavigationBar />
-      <HomePage />
+      {/* <HomePage /> */}
+      <ConceptMapperPage />
     </div>
   );
 }
