@@ -16,7 +16,7 @@ const ConceptMapperPage = () => {
         ) : (
           <>
             <h2>Inputs</h2>
-            <p>Inputs section closed</p>
+            <p>Inputs section open. Form will be here.</p>
           </>
         )}
       </div>
