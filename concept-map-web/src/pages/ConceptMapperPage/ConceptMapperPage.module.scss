@@ -7,6 +7,8 @@
 .inputs {
   display: flex;
   flex-direction: column;
+  padding: 20px;
+  gap: 10px;
 
   border-color: grey;
   border-style: solid;
@@ -18,6 +20,12 @@
       transform: rotate(-90deg);
     }
   }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 }
 
 .results {
@@ -27,4 +35,22 @@
   padding: 20px;
 
   text-align: left;
+}
+
+.input {
+  &__file_upload {
+    display: flex;
+    align-items: center;
+
+    border: solid;
+    border-color: lightgrey;
+    border-width: 1px;
+    border-radius: 4px;
+
+    &__description {
+      margin-left: 10px;
+
+      color: grey;
+    }
+  }
 }
