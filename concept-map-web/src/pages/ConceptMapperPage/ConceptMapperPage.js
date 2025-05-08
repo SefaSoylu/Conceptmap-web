@@ -1,5 +1,21 @@
 import { useState } from 'react';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import styles from './ConceptMapperPage.module.scss';
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 const ConceptMapperPage = () => {
   const [toggle, setToggle] = useState(false);
@@ -16,7 +32,75 @@ const ConceptMapperPage = () => {
         ) : (
           <>
             <h2>Inputs</h2>
-            <p>Inputs section open. Form will be here.</p>
+            <form className={styles.inputs__form}>
+              <div>
+                <TextField
+                  id="outlined-basic"
+                  label="Domain ID"
+                  variant="outlined"
+                />
+                <TextField
+                  id="outlined-basic"
+                  label="Vocabulary ID"
+                  variant="outlined"
+                />
+                <TextField
+                  id="outlined-basic"
+                  label="Concept class ID"
+                  variant="outlined"
+                />
+                <TextField
+                  id="outlined-basic"
+                  label="Concept name row"
+                  variant="outlined"
+                />
+              </div>
+              <div>
+                <div className={styles.input__file_upload}>
+                  <Button
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    Upload file
+                    <VisuallyHiddenInput
+                      type="file"
+                      onChange={(event) => console.log(event.target.files)}
+                      multiple
+                    />
+                  </Button>
+                  <span className={styles.input__file_upload__description}>
+                    Concepts to map
+                  </span>
+                </div>
+
+                <div className={styles.input__file_upload}>
+                  <Button
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    Upload file
+                    <VisuallyHiddenInput
+                      type="file"
+                      onChange={(event) => console.log(event.target.files)}
+                      multiple
+                    />
+                  </Button>
+                  <span className={styles.input__file_upload__description}>
+                    File to save to
+                  </span>
+                </div>
+              </div>
+              <div>
+                <Button variant="contained">Clear</Button>
+                <Button variant="contained">Run Concept Mapper</Button>
+              </div>
+            </form>
           </>
         )}
       </div>
