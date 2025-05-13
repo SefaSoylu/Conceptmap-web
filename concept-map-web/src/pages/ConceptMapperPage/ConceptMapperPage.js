@@ -7,6 +7,8 @@ import DownloadIcon from '@mui/icons-material/Download';
 import styles from './ConceptMapperPage.module.scss';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -135,9 +137,16 @@ const ConceptMapperPage = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.inputs}>
-        <button onClick={() => setToggle(!toggle)}>
-          {toggle ? 'Open panel' : 'Close panel'}
-        </button>
+        {results.length !== 0 && (
+          <button
+            className={styles.inputs__toggle_button}
+            onClick={() => setToggle(!toggle)}
+            // variant="contained"
+          >
+            {toggle ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </button>
+        )}
+
         {toggle ? (
           <h2 className={styles.inputs__closed__heading}>Inputs</h2>
         ) : (

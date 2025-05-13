@@ -6,9 +6,11 @@
 .inputs {
   display: flex;
   flex-direction: column;
+  // padding: 20px 50px;
   padding: 20px;
   gap: 10px;
   max-width: 30vw;
+  position: relative;
 
   border-color: grey;
   border-style: solid;
@@ -19,6 +21,14 @@
     &__heading {
       transform: rotate(-90deg);
     }
+  }
+
+  &__toggle_button {
+    position: absolute; // Position the button absolutely
+    top: 50%; // Adjust the vertical position as needed
+    right: 0; // Adjust the horizontal position to place it outside the right border
+    transform: translateX(50%); // Center the button on the border
+    z-index: 10; // Ensure it appears above other elements
   }
 
   &__form {
@@ -50,7 +60,7 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 20px;
+  padding: 20px 50px;
   width: 70vw;
 
   text-align: left;
@@ -92,6 +102,10 @@
     margin-top: 1rem;
 
     &__container {
+      max-height: calc(
+        100vh - 215px
+      ); // Adjust to fit within the viewport height
+      overflow-y: auto; /* Enable vertical scrolling */
       overflow-x: auto; /* Ensure the table is scrollable if it's too wide */
       margin-top: 1rem;
     }
