@@ -2,8 +2,11 @@ import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import DownloadIcon from '@mui/icons-material/Download';
 import styles from './ConceptMapperPage.module.scss';
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -51,9 +54,21 @@ const ConceptMapperPage = () => {
     }));
   };
 
+  const handleClear = () => {
+    setFormData({
+      domain: '',
+      vocabulary: '',
+      conceptClass: '',
+      conceptColumn: '',
+      conceptCsv: null,
+      modelPack: null,
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(''); // Clear previous error
     setResults([]); // Clear previous results
 
     const form = new FormData();
@@ -170,7 +185,7 @@ const ConceptMapperPage = () => {
                     role={undefined}
                     variant="contained"
                     tabIndex={-1}
-                    startIcon={<CloudUploadIcon />}
+                    startIcon={<FileUploadIcon />}
                   >
                     Upload file
                     <VisuallyHiddenInput
@@ -191,7 +206,7 @@ const ConceptMapperPage = () => {
                     role={undefined}
                     variant="contained"
                     tabIndex={-1}
-                    startIcon={<CloudUploadIcon />}
+                    startIcon={<FileUploadIcon />}
                   >
                     Upload file
                     <VisuallyHiddenInput
@@ -207,7 +222,9 @@ const ConceptMapperPage = () => {
                 </div>
               </div>
               <div className={styles.inputs__end_buttons}>
-                <Button variant="contained">Clear</Button>
+                <Button variant="contained" onClick={handleClear}>
+                  Clear
+                </Button>
                 <Button variant="contained" type="submit">
                   Run Concept Mapper
                 </Button>
@@ -217,34 +234,55 @@ const ConceptMapperPage = () => {
         )}
       </div>
       <div className={styles.results}>
-        <h2>Results</h2>
-        {loading && <p>Loading...</p>}
-        {error && !loading && <p>{error}</p>}
-        {results.length === 0 ? (
+        <div className={styles.results__heading__container}>
+          <h2>Results</h2>
+          {results !== 0 && (
+            <Button
+              variant="contained"
+              onClick={handleDownload}
+              startIcon={<DownloadIcon />}
+            >
+              Download results
+            </Button>
+          )}
+        </div>
+        {loading && (
+          <div>
+            <CircularProgress />
+            <p>Concept mapper is running.</p>
+            <p>Please wait, this may take a few minutes...</p>
+          </div>
+        )}
+        {error && !loading && <Alert severity="error">{error}</Alert>}
+        {results.length === 0 && !loading && !error && (
           <p>Results will appear here upon successful concept mapping.</p>
-        ) : (
+        )}
+        {results.length !== 0 && (
           <>
-            <button className="download-btn" onClick={handleDownload}>
-              ⬇️ Download Results (CSV)
-            </button>
-            <table>
-              <thead>
-                <tr>
-                  {Object.keys(results[0]).map((key) => (
-                    <th key={key}>{key}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {results.map((row, index) => (
-                  <tr key={index}>
-                    {Object.values(row).map((val, i) => (
-                      <td key={i}>{val}</td>
+            <div className={styles.results__table__container}>
+              <table className={styles.results__table}>
+                <thead>
+                  <tr>
+                    {Object.keys(results[0]).map((key) => (
+                      <th className={styles.results__table__header} key={key}>
+                        {key}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {results.map((row, index) => (
+                    <tr key={index}>
+                      {Object.values(row).map((val, i) => (
+                        <td className={styles.results__table__data} key={i}>
+                          {val}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </>
         )}
       </div>
