@@ -33,7 +33,7 @@ const ConceptMapperPage = () => {
           <>
             <h2>Inputs</h2>
             <form className={styles.inputs__form}>
-              <div>
+              <div className={styles.inputs__text_inputs}>
                 <TextField
                   id="outlined-basic"
                   label="Domain ID"
@@ -96,7 +96,7 @@ const ConceptMapperPage = () => {
                   </span>
                 </div>
               </div>
-              <div>
+              <div className={styles.inputs__end_buttons}>
                 <Button variant="contained">Clear</Button>
                 <Button variant="contained">Run Concept Mapper</Button>
               </div>

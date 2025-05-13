@@ -2,9 +2,9 @@ $primary-colour: #1875d0;
 
 .nav {
   display: flex;
-  flex-grow: 1;
   align-items: center;
   justify-content: space-between;
+  padding: 0 0 0 20px;
 
   background-color: $primary-colour;
   color: white;
