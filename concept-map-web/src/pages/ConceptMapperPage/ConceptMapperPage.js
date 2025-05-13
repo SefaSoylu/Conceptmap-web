@@ -136,7 +136,7 @@ const ConceptMapperPage = () => {
     <div className={styles.wrapper}>
       <div className={styles.inputs}>
         <button onClick={() => setToggle(!toggle)}>
-          {toggle ? 'Open' : 'Close'}
+          {toggle ? 'Open panel' : 'Close panel'}
         </button>
         {toggle ? (
           <h2 className={styles.inputs__closed__heading}>Inputs</h2>
@@ -192,12 +192,21 @@ const ConceptMapperPage = () => {
                       type="file"
                       name="conceptCsv"
                       onChange={handleFileChange}
-                      multiple
                     />
                   </Button>
-                  <span className={styles.input__file_upload__description}>
-                    Concepts to map
-                  </span>
+                  {formData.conceptCsv ? (
+                    <span className={styles.input__file_upload__description}>
+                      {formData.conceptCsv.name.substring(0, 30) + '...'}
+                    </span>
+                  ) : (
+                    <span
+                      className={
+                        styles.input__file_upload__description__placeholder
+                      }
+                    >
+                      Concepts to map
+                    </span>
+                  )}
                 </div>
 
                 <div className={styles.input__file_upload}>
@@ -213,12 +222,23 @@ const ConceptMapperPage = () => {
                       type="file"
                       name="modelPack"
                       onChange={handleFileChange}
-                      multiple
                     />
                   </Button>
-                  <span className={styles.input__file_upload__description}>
-                    File to save to
-                  </span>
+                  {formData.modelPack ? (
+                    <span className={styles.input__file_upload__description}>
+                      {formData.modelPack.name.length < 30
+                        ? formData.modelPack.name
+                        : formData.modelPack.name.substring(0, 30) + '...'}
+                    </span>
+                  ) : (
+                    <span
+                      className={
+                        styles.input__file_upload__description__placeholder
+                      }
+                    >
+                      File to save to
+                    </span>
+                  )}
                 </div>
               </div>
               <div className={styles.inputs__end_buttons}>
@@ -236,7 +256,7 @@ const ConceptMapperPage = () => {
       <div className={styles.results}>
         <div className={styles.results__heading__container}>
           <h2>Results</h2>
-          {results !== 0 && (
+          {results.length !== 0 && (
             <Button
               variant="contained"
               onClick={handleDownload}
@@ -247,10 +267,16 @@ const ConceptMapperPage = () => {
           )}
         </div>
         {loading && (
-          <div>
+          <div className={styles.results__loading}>
+            <div className={styles.results__loading__text__container}>
+              <p className={styles.results__loading__text}>
+                Concept mapper is running.
+              </p>
+              <p className={styles.results__loading__text}>
+                Please wait, this may take a few minutes...
+              </p>
+            </div>
             <CircularProgress />
-            <p>Concept mapper is running.</p>
-            <p>Please wait, this may take a few minutes...</p>
           </div>
         )}
         {error && !loading && <Alert severity="error">{error}</Alert>}
