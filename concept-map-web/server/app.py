@@ -30,7 +30,7 @@ def run_concept_mapper_background(domain, vocab, concept_class, concept_col):
         INPUT_CSV_PATH = os.path.join(BASE_DIR, 'data', 'input_concepts.csv')
         MODEL_PACK_PATH = os.path.join(BASE_DIR, 'data', 'model_pack.zip')
         OUTPUT_CSV_PATH = os.path.join(BASE_DIR, 'data', 'concepts_out.csv')
-        output_path = r"C:/Users/golde/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv" # change this to your file path
+        output_path = r"C:/Users/sweet/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv" # change this to your file path
 
         python_executable = os.path.join(os.getenv("VIRTUAL_ENV"), "Scripts", "python.exe")
 
@@ -55,7 +55,7 @@ def run_concept_mapper_background(domain, vocab, concept_class, concept_col):
             cmd,
             capture_output=True,
             text=True,
-            cwd=r"C:/Users/golde/OneDrive/Desktop/Workspace/EHRQC" # change this to your file path
+            cwd=r"C:/Users/sweet/OneDrive/Desktop/Workspace/EHRQC" # change this to your file path
         )
 
         print("Subprocess finished.")
@@ -115,7 +115,7 @@ def check_status():
 @app.route("/results", methods=["GET"])
 def get_results():
     try:
-        output_path = r"C:/Users/golde/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv"
+        output_path = r"C:/Users/sweet/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv"
         if not os.path.exists(output_path):
             return jsonify({"error": "Output file not found."}), 404
 
@@ -178,7 +178,7 @@ def get_results():
 @app.route("/download", methods=["GET"])
 def download_results():
     try:
-        output_path = r"C:/Users/golde/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv" # change this to your file path
+        output_path = r"C:/Users/sweet/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv" # change this to your file path
         if not os.path.exists(output_path):
             return jsonify({"error": "Output file not found."}), 404
         return send_file(output_path, as_attachment=True)

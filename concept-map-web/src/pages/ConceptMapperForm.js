@@ -165,9 +165,10 @@ function ConceptMapperForm() {
               <thead>
                 <tr>
                   <th>Search Phrase</th>
-                  <th>Model</th>
-                  <th>Concept</th>
-                  <th>Confidence</th>
+                  <th>Fuzzy Concept</th>
+                  <th>MedCat Concept</th>
+                  <th>Reverse Index Concept</th>
+                  <th>Selected</th>
                 </tr>
               </thead>
               <tbody>
@@ -176,23 +177,44 @@ function ConceptMapperForm() {
                 const selectedModel = selectedModels[phrase] || row.defaultModel;
                 const modelData = row.models[selectedModel];
 
+                console.log(results);
+
                 return (
-                  <tr key={i}>
+                  <tr
+                    key={i}
+                    className={
+                      modelData.confidence === "High"
+                        ? "confidence-high"
+                        : modelData.confidence === "Medium"
+                        ? "confidence-medium"
+                        : "confidence-low"
+                    }
+                  >
                     <td>{phrase}</td>
-                    <td>
-                      <select
-                        value={selectedModel}
-                        onChange={(e) => handleSelectChange(phrase, e.target.value)}
-                      >
-                        {Object.entries(row.models).map(([model, data]) => (
-                          <option key={model} value={model}>
-                          {model.charAt(0).toUpperCase() + model.slice(1)}
-                        </option>
-                        ))}
-                      </select>
-                    </td>
+                    {Object.entries(row.models).map(([model, data]) => (
+                      <td key={model}>
+                        {data.confidence !== "High" ? (
+                          <>
+                            {data.concept !== '' ? (
+                              <input
+                              type="radio"
+                              name={`model-select-${i}`} // One selection per row
+                              checked={selectedModel === model}
+                              value={model}
+                              onChange={() => handleSelectChange(phrase, model)}
+                            />
+                            ): (
+                              <p>N/A</p>
+                            )}
+                            
+                            {data.concept}
+                          </>
+                        ) : (
+                          <>{data.concept}</>
+                        )}
+                      </td>
+                    ))}
                     <td>{modelData.concept}</td>
-                    <td>{modelData.confidence}</td>
                   </tr>
                 );
               })}

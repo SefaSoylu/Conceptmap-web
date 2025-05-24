@@ -105,6 +105,7 @@ html, body {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
+  color: black;
 }
 
 .results-table th,
@@ -120,3 +121,16 @@ html, body {
   background-color: #eaeaea;
   color: black;
 }
+
+.confidence-high {
+  background-color: #d4edda; /* light green */
+}
+
+.confidence-medium {
+  background-color: #fff3cd; /* light yellow */
+}
+
+.confidence-low {
+  background-color: #f8d7da; /* light red */
+}
+
