@@ -23,23 +23,30 @@ def run_concept_mapper_background(domain, vocab, concept_class, concept_col):
         status["done"] = False
         status["error"] = None
 
-        output_path = r"C:/Users/sweet/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv" # change this to your file path
+        # Absolute path to the folder this script is in (i.e., concept-map-web/server)
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+        # Absolute paths to the two uploaded files
+        INPUT_CSV_PATH = os.path.join(BASE_DIR, 'data', 'input_concepts.csv')
+        MODEL_PACK_PATH = os.path.join(BASE_DIR, 'data', 'model_pack.zip')
+        OUTPUT_CSV_PATH = os.path.join(BASE_DIR, 'data', 'concepts_out.csv')
+        output_path = r"C:/Users/golde/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv" # change this to your file path
 
         python_executable = os.path.join(os.getenv("VIRTUAL_ENV"), "Scripts", "python.exe")
 
         print("VIRTUAL_ENV:", os.getenv("VIRTUAL_ENV"))
 
         cmd = [
-            python_executable,
-            "-m", "ehrqc.standardise.migrate_omop.ConceptMapper",
-            domain,
-            vocab,
-            concept_class,
-            "data/input_concepts.csv",
-            concept_col,
-            "data/concepts_out.csv",
-            f"--model_pack_path=data/model_pack.zip"
-        ]
+        python_executable,
+        "-m", "ehrqc.standardise.migrate_omop.ConceptMapper",
+        domain,
+        vocab,
+        concept_class,
+        INPUT_CSV_PATH,
+        concept_col,
+        OUTPUT_CSV_PATH,
+        f"--model_pack_path={MODEL_PACK_PATH}"
+]
 
         print("Running command:", ' '.join(cmd))
         print("Waiting for subprocess to finish...")
@@ -48,7 +55,7 @@ def run_concept_mapper_background(domain, vocab, concept_class, concept_col):
             cmd,
             capture_output=True,
             text=True,
-            cwd=r"C:/Users/sweet/OneDrive/Desktop/Workspace/EHRQC" # change this to your file path
+            cwd=r"C:/Users/golde/OneDrive/Desktop/Workspace/EHRQC" # change this to your file path
         )
 
         print("Subprocess finished.")
@@ -108,19 +115,70 @@ def check_status():
 @app.route("/results", methods=["GET"])
 def get_results():
     try:
-        output_path = r"C:/Users/sweet/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv" # change this to your file path
+        output_path = r"C:/Users/golde/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv"
         if not os.path.exists(output_path):
             return jsonify({"error": "Output file not found."}), 404
+
         df = pd.read_csv(output_path)
-        # Replace NaN with None (which becomes `null` in JSON)
-        return jsonify(df.where(pd.notnull(df), None).to_dict(orient="records"))
+        df.fillna("", inplace=True)
+
+        grouped = df.groupby("searchPhrase")
+        result = []
+
+        confidence_rank = {"Low": 0, "Medium": 1, "High": 2}
+
+        for phrase, group in grouped:
+            model_map = {"medcat": {}, "fuzzy": {}, "reverseIndex": {}}
+
+            for _, row in group.iterrows():
+                majority_concept = row["majorityVoting"]
+                confidence = row["confidence"]
+
+                for model in model_map:
+                    concept = row[f"{model}Concept"]
+                    if concept == majority_concept:
+                        model_map[model] = {"concept": concept, "confidence": confidence}
+                    elif "concept" not in model_map[model]:
+                        model_map[model] = {"concept": concept, "confidence": "Low"}
+
+            # Score each model
+            conf_scores = {
+                model: confidence_rank[data["confidence"]]
+                for model, data in model_map.items()
+            }
+
+            max_score = max(conf_scores.values())
+            top_models = [model for model, score in conf_scores.items() if score == max_score]
+
+            # Rule 1 & 2: All Low or All High → default to fuzzy
+            if set(conf_scores.values()) == {0} or set(conf_scores.values()) == {2}:
+                default_model = "fuzzy"
+            # Rule 3: Tie on Medium or mixed
+            elif len(top_models) > 1:
+                if "fuzzy" in top_models and conf_scores["fuzzy"] > 0:
+                    default_model = "fuzzy"
+                else:
+                    non_fuzzy = [m for m in top_models if m != "fuzzy"]
+                    default_model = non_fuzzy[0] if non_fuzzy else "fuzzy"
+            # Rule 4: One model is highest
+            else:
+                default_model = top_models[0]
+
+            result.append({
+                "searchPhrase": phrase,
+                "models": model_map,
+                "defaultModel": default_model
+            })
+
+        return jsonify(result)
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route("/download", methods=["GET"])
 def download_results():
     try:
-        output_path = r"C:/Users/sweet/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv" # change this to your file path
+        output_path = r"C:/Users/golde/OneDrive/Desktop/Workspace/EHRQC/data/concepts_out.csv" # change this to your file path
         if not os.path.exists(output_path):
             return jsonify({"error": "Output file not found."}), 404
         return send_file(output_path, as_attachment=True)
