@@ -89,10 +89,14 @@ html, body {
 /* Results container styling */
 .results-container {
   margin-top: 2rem;
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.results-container h2{
+  color: black;
 }
 
 /* Results table container */
@@ -134,3 +138,14 @@ html, body {
   background-color: #f8d7da; /* light red */
 }
 
+.legend{
+  width: 30%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  color: black;
+  float: right;
+}
+
+.legend th {
+  border: 1px solid black;
+}

@@ -25,7 +25,23 @@ function ConceptMapperForm() {
   };
 
   const handleDownload = () => {
-    window.open("http://localhost:5001/download", "_blank");
+    let csvContent = "searchPhrase,selectedModel\n";
+
+    results.forEach((row) => {
+      const phrase = row.searchPhrase;
+      const selectedModel = selectedModels[phrase] || row.defaultModel;
+      const conceptName = row.models[selectedModel]?.concept
+      csvContent += `${phrase},${conceptName}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "selected_models.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleSubmit = async (e) => {
@@ -160,6 +176,16 @@ function ConceptMapperForm() {
             <button className="download-btn" onClick={handleDownload}>
               ⬇️ Download Results (CSV)
             </button>
+
+            
+            <table className="legend">
+              <thead>
+                <tr>Confidence</tr>
+                <tr className="confidence-high">High</tr>
+                <tr className="confidence-medium">Medium</tr>
+                <tr className="confidence-low">Low</tr>
+              </thead>
+            </table>
 
             <table className="results-table">
               <thead>
